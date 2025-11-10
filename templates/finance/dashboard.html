@@ -1,0 +1,85 @@
+{% extends 'pos/base.html' %}
+{% load static %}
+
+{% block heading %}Finance Dashboard{% endblock %}
+{% block stylesheets %}
+<link href="{% static 'css/finance_dashboard.css' %}" rel="stylesheet">
+<style>
+  .card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  .table th, .table td {
+    vertical-align: middle;
+  }
+
+</style>
+{% endblock stylesheets %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Finance Dashboard</h2>
+
+  <div class="row mt-3">
+    <div class="col-md-4">
+      <div class="card bg-light p-3">
+        <h5>Total Debts: {{ total_debt }} UGX</h5>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card bg-light p-3">
+        <h5>Total Credits: {{ total_credit }} UGX</h5>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card bg-light p-3">
+        <h5>Total Expenses: {{ total_expense }} UGX</h5>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <h4>Debtors</h4>
+  <table class="table table-bordered">
+    <thead><tr><th>Customer</th><th>Amount Owed</th><th>Due Date</th><th>Status</th></tr></thead>
+    <tbody>
+      {% for debtor in debtors %}
+        <tr>
+          <td>{{ debtor.customer }}</td>
+          <td>{{ debtor.amount_owed }}</td>
+          <td>{{ debtor.due_date }}</td>
+          <td>{{ debtor.is_paid|yesno:"Paid,Unpaid" }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h4>Creditors</h4>
+  <table class="table table-bordered">
+    <thead><tr><th>Name</th><th>Amount</th><th>Status</th></tr></thead>
+    <tbody>
+      {% for creditor in creditors %}
+        <tr>
+          <td>{{ creditor.name }}</td>
+          <td>{{ creditor.amount_to_pay }}</td>
+          <td>{{ creditor.is_paid|yesno:"Paid,Unpaid" }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h4>Expenses</h4>
+  <table class="table table-bordered">
+    <thead><tr><th>Category</th><th>Description</th><th>Amount</th></tr></thead>
+    <tbody>
+      {% for expense in expenses %}
+        <tr>
+          <td>{{ expense.category }}</td>
+          <td>{{ expense.description }}</td>
+          <td>{{ expense.amount }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
