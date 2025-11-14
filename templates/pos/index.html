@@ -1,47 +1,94 @@
 {% extends "pos/base.html" %}
 {% load static %}
 {% load humanize %}
-<!-- Page title  -->
-{% block title %}Dashboard{% endblock title %}
+{% load custom_filters %}
 
-<!-- Specific Page CSS goes HERE  -->
+{% block title %}Combined Dashboard{% endblock title %}
+
 {% block stylesheets %}{% endblock stylesheets %}
 
-<!-- Page Heading -->
-{% block heading %}Dashboard{% endblock heading %}
+{% block heading %}Dashboard Overview{% endblock heading %}
 
-<!-- Page content  -->
 {% block content %}
-<!-- Content Row -->
 <div class="row">
-    
 
-    <!-- Earnings (Monthly) Card  -->
     <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card border-left-danger shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                            Avg Earning per Month</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{avg_month|intcomma}} UGX</div>
+                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                            Total Outstanding Debt</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_debt|intcomma}} UGX</div>
                     </div>
                     <div class="col-auto">
-                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        <i class="fas fa-hand-holding-usd fa-2x text-gray-300"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Earnings (Annua) Card  -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Total Outstanding Credit</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_credit|intcomma}} UGX</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-handshake fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Expenses (Annual)
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_expense|intcomma}} UGX</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-money-bill-wave fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-{{ profit_card_class }} shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-{{ profit_card_class }} text-uppercase mb-1">
+                        Net Position (Cash Flow)</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{net_profit|intcomma}} UGX</div>
+                </div>
+                <div class="col-auto">
+                    <i class="fas fa-chart-line fa-2x text-gray-300"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<hr>
+<div class="row">
     <div class="col-xl-3 col-md-6 mb-4">
         <div class="card border-left-success shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                            Earnings (Annual)</div>
+                            Total Sales Revenue (Annual)</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">{{annual_earnings|intcomma}} UGX</div>
                     </div>
                     <div class="col-auto">
@@ -51,11 +98,27 @@
             </div>
         </div>
     </div>
-
-    <!-- Products Card -->
+    
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Avg Sales per Month</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{avg_month|intcomma}} UGX</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calendar-alt fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <div class="col-xl-3 col-md-6 mb-4">
         <div class="card border-left-info shadow h-100 py-2">
-            <div class="card-body">
+             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Registered Products
@@ -74,10 +137,9 @@
         </div>
     </div>
 
-    <!-- Categories Card -->
     <div class="col-xl-3 col-md-6 mb-4">
         <div class="card border-left-info shadow h-100 py-2">
-            <div class="card-body">
+             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Registered Categories
@@ -95,21 +157,14 @@
             </div>
         </div>
     </div>
-
 </div>
-
-<!-- Content Row -->
+<hr>
 <div class="row">
-
-    <!-- Area Chart -->
     <div class="col-xl-8 col-lg-7">
         <div class="card shadow mb-4">
-            <!-- Card Header - Dropdown -->
-            <div
-                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Year Earnings Overview</h6>
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Sales Earnings Overview</h6>
             </div>
-            <!-- Card Body -->
             <div class="card-body">
                 <div class="chart-area">
                     <canvas id="myAreaChart"></canvas>
@@ -118,48 +173,84 @@
         </div>
     </div>
 
-    <!-- Pie Chart -->
     <div class="col-xl-4 col-lg-5">
         <div class="card shadow mb-4">
-            <!-- Card Header - Dropdown -->
-            <div
-                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Best selling products</h6>
             </div>
-            <!-- Card Body -->
             <div class="card-body">
                 <div class="chart-pie pt-4 pb-2">
                     <canvas id="myPieChart"></canvas>
                 </div>
                 <div class="mt-4 text-center small">
-                    <div class="mr-2">
-                        <i class="fas fa-circle text-primary mr-2"></i>{{top_products_names_list.0}}
-                    </div>
-                    <div class="mr-2 mt-2">
-                        <i class="fas fa-circle text-success mr-2"></i>{{top_products_names_list.1}}
-                    </div>
-                    <div class="mr-2 mt-2">
-                        <i class="fas fa-circle text-info mr-2"></i>{{top_products_names_list.2}}
-                    </div>
+                    <div class="mr-2"><i class="fas fa-circle text-primary mr-2"></i>{{top_products_names_list.0}}</div>
+                    <div class="mr-2 mt-2"><i class="fas fa-circle text-success mr-2"></i>{{top_products_names_list.1}}</div>
+                    <div class="mr-2 mt-2"><i class="fas fa-circle text-info mr-2"></i>{{top_products_names_list.2}}</div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<hr>
+<div class="row">
+    
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Recent Expenses</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Category</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for expense in recent_expenses %}
+                            <tr>
+                                <td>{{ expense.date|date:"M d, Y" }}</td>
+                                <td>{{ expense.category }}</td>
+                                <td>{{ expense.amount|intcomma }} UGX</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center">No recent expenses recorded.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-center mt-3">
+                    <a href="{% url 'finance:expenses_list' %}" class="btn btn-sm btn-outline-primary">View All Expenses</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Recent Payables & Receivables</h6>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Table integration for recent debtors and creditors goes here.</p>
+                <a href="#" class="btn btn-sm btn-outline-info">View All Finance Details</a>
+            </div>
+        </div>
+    </div>
+    
+</div>
 {% endblock content %}
 
-<!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
-<!--Chart JS-->
 <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
-<!--Monthly earnings variable-->
 <input type="hidden" id="monthly_earnings"  value="{{monthly_earnings|safe}}">
-<!--Top products names variable-->
 <input type="hidden" id="top_products_names"  value="{{top_products_names}}">
-<!--Top products quantity variable-->
 <input type="hidden" id="top_products_quantity"  value="{{top_products_quantity|safe}}">
-<!--Chart area-->
 <script src="{% static 'js/chart-area.js' %}"></script>
-<!--Chart pie-->
 <script src="{% static 'js/chart-pie.js' %}"></script>
 {% endblock javascripts %}

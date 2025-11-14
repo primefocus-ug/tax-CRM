@@ -3,6 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from .models import Category, Product
+from django.http import JsonResponse
+from .models import Product
+from django.views.decorators.http import require_POST
+import json
+from django.views.decorators.http import require_http_methods
 
 
 @login_required(login_url="/accounts/login/")
@@ -11,8 +16,29 @@ def categories_list_view(request):
         "active_icon": "products_categories",
         "categories": Category.objects.all()
     }
-    return render(request, "products/categories.html", context=context)
-
+    
+@require_POST
+def get_products(request):
+    term = request.POST.get('term', '').strip()
+    
+    if term:
+        products = Product.objects.filter(name__icontains=term)
+    else:
+        # Show all products when no search term
+        products = Product.objects.all()[:20]  # Limit to 20
+    
+    results = [
+        {
+            'id': p.id,
+            'text': p.name,
+            'name': p.name,
+            'category': p.category if hasattr(p, 'category') else '',
+            'price': float(p.price),
+        }
+        for p in products
+    ]
+    
+    return JsonResponse(results, safe=False)
 
 @login_required(login_url="/accounts/login/")
 def categories_add_view(request):
@@ -54,6 +80,20 @@ def categories_add_view(request):
             return redirect('products:categories_add')
 
     return render(request, "products/categories_add.html", context=context)
+
+@require_http_methods(["POST"])
+def create_product(request):
+    try:
+        data = json.loads(request.body)
+        product = Product.objects.create(
+            name=data['name'],
+            category=data['category'],
+            price=data['price'],
+            stock=data['stock']
+        )
+        return JsonResponse({'success': True, 'id': product.id})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
 
 
 @login_required(login_url="/accounts/login/")

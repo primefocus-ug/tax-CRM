@@ -27,4 +27,6 @@ urlpatterns = [
          views.products_delete_view, name='products_delete'),
     # Get products AJAX
     path("get", views.get_products_ajax_view, name="get_products"),
+
+    path('create/', views.create_product, name='create_product'),
 ]

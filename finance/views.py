@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import Debtor, Creditor, Expense
 from django.shortcuts import redirect
+from django.core.paginator import Paginator
 from django.urls import reverse
 from .forms import ExpenseForm
 
@@ -51,6 +52,15 @@ def expense_create_view(request):
 
 def add_expense(request):
     if request.method == 'POST':
+        form = ExpenseForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('finance:expenses_list')  # Changed from 'expense_list'
+    else:
+        form = ExpenseForm()
+
+    return render(request, 'add_expense.html', {'form': form})
+    if request.method == 'POST':
         # Create a form instance and populate it with data from the request
         form = ExpenseForm(request.POST)
         if form.is_valid():
@@ -80,6 +90,28 @@ def expense_update_view(request, pk):
         'active_icon': 'expenses',
     }
     return render(request, 'finance/expense_form.html', context)
+
+# finance/views.py
+
+def expenses_list_view(request):
+    """
+    Lists all recorded expenses with basic pagination.
+    """
+    # CRITICAL: Ensure you are querying ALL expenses and ordering them by the newest first
+    expenses = Expense.objects.all().order_by('-date') # Use '-' for descending (newest first)
+    
+    # Check if you have any filters here that might be running
+    # If you have: .filter(some_criteria=value), ensure the new expense meets that criteria
+    
+    # ... (Pagination logic)
+    paginator = Paginator(expenses, 20) 
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'page_obj': page_obj,
+    }
+    return render(request, 'finance/expenses_list.html', context)
 
 
 def expense_delete_view(request, pk):

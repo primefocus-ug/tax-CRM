@@ -1,0 +1,77 @@
+{% extends 'pos/base.html' %} 
+{% load static %}
+
+{% block title %}Add New Expense{% endblock %}
+
+{% block content %}
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+       <h1 class="h3 mb-0 text-gray-800">Add New Expense</h1>
+        <a href="{% url 'finance:expenses_list' %}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
+            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back to Expenses List
+        </a>
+    </div>
+
+    <div class="container">
+    <h2>Add New Expense</h2>
+    <form method="post">
+        {% csrf_token %} {{ form.as_p }} <button type="submit" class="btn btn-primary">Save Expense</button>
+    </form>
+</div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Expense Details</h6>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %} {# Required for Django forms security #}
+
+                {# Render non-field errors if any #}
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {# Render form fields manually for more control, or use form.as_p / form.as_table #}
+                <div class="form-group">
+                    <label for="{{ form.date.id_for_label }}">Date:</label>
+                    {{ form.date }}
+                    {% if form.date.errors %}
+                        <div class="invalid-feedback d-block">{{ form.date.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.category.id_for_label }}">Category:</label>
+                    {{ form.category }}
+                    {% if form.category.errors %}
+                        <div class="invalid-feedback d-block">{{ form.category.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.description.id_for_label }}">Description:</label>
+                    {{ form.description }}
+                    {% if form.description.errors %}
+                        <div class="invalid-feedback d-block">{{ form.description.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.amount.id_for_label }}">Amount ($):</label>
+                    {{ form.amount }}
+                    {% if form.amount.errors %}
+                        <div class="invalid-feedback d-block">{{ form.amount.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Save Expense</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

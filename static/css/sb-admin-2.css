@@ -12609,3 +12609,38 @@ footer.sticky-footer .copyright {
 body.sidebar-toggled footer.sticky-footer {
   width: 100%;
 }
+
+/* static/css/dark_theme.css */
+
+body.dark-mode {
+    /* Backgrounds */
+    --color-primary-bg: #121212; /* Darker primary background */
+    --color-secondary-bg: #1e1e1e; /* Slightly lighter surface for cards, etc. */
+
+    /* Text */
+    --color-text-primary: #e0e0e0; /* Light text on dark background */
+    --color-text-secondary: #aaaaaa;
+
+    /* Card/Border */
+    --color-card-border: #333333;
+    --color-shadow: rgba(0, 0, 0, 0.5); 
+}
+
+/* Apply dark styles to specific elements */
+body.dark-mode .sidebar {
+    background-color: #0d0d0d !important;
+}
+
+body.dark-mode .card, body.dark-mode .table {
+    background-color: var(--color-secondary-bg);
+    color: var(--color-text-primary);
+    border-color: var(--color-card-border);
+}
+
+body.dark-mode .table thead th {
+    color: var(--color-text-secondary);
+    border-bottom-color: var(--color-card-border);
+}
+
+/* You will need to override dozens of specific classes here */
+/* OR, ideally, convert your existing main CSS to use variables */

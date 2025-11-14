@@ -54,3 +54,24 @@
   });
 
 })(jQuery); // End of use strict
+
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    const themeKey = 'pos-theme';
+
+    // 1. Load saved theme preference
+    const savedTheme = localStorage.getItem(themeKey);
+    if (savedTheme === 'dark') {
+        body.classList.add('dark-mode');
+    }
+
+    // 2. Handle click event
+    themeToggle.addEventListener('click', function() {
+        if (body.classList.toggle('dark-mode')) {
+            // Theme switched to dark
+            localStorage.setItem(themeKey, 'dark');
+        } else {
+            // Theme switched to light
+            localStorage.setItem(themeKey, 'light');
+        }
+    });
